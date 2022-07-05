@@ -1,4 +1,6 @@
-﻿using AzureSign.Core.Interop;
+﻿using static Windows.Win32.PInvoke;
+using Windows.Win32.Security.Cryptography;
+using AzureSign.Core.Interop;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Diagnostics;
@@ -89,11 +91,11 @@ namespace AzureSign.Core
 
             if (pageHashing == true)
             {
-                flags |= SignerSignEx3Flags.SPC_INC_PE_PAGE_HASHES_FLAG;
+                flags |= (SignerSignEx3Flags)SPC_INC_PE_PAGE_HASHES_FLAG;
             }
             else if (pageHashing == false)
             {
-                flags |= SignerSignEx3Flags.SPC_EXC_PE_PAGE_HASHES_FLAG;
+                flags |= (SignerSignEx3Flags)SPC_EXC_PE_PAGE_HASHES_FLAG;
             }
 
             SignerSignTimeStampFlags timeStampFlags;
@@ -161,8 +163,8 @@ namespace AzureSign.Core
                         SIGNER_SIGN_EX3_PARAMS parameters;
                         clientData.pSignerParams = &parameters;
                         sipData = &clientData;
-                        flags &= ~SignerSignEx3Flags.SPC_INC_PE_PAGE_HASHES_FLAG;
-                        flags |= SignerSignEx3Flags.SPC_EXC_PE_PAGE_HASHES_FLAG;
+                        flags &= (SignerSignEx3Flags)~SPC_INC_PE_PAGE_HASHES_FLAG;
+                        flags |= (SignerSignEx3Flags)SPC_EXC_PE_PAGE_HASHES_FLAG;
                         FillAppxExtension(ref clientData, flags, timeStampFlags, &subjectInfo, &signerCert, &signatureInfo, &context, pTimestampUrl, pTimestampAlgorithm, &signCallbackInfo);
                         break;
                 }
@@ -234,7 +236,7 @@ namespace AzureSign.Core
             }
             var resultPtr = Marshal.AllocHGlobal(digest.Length);
             Marshal.Copy(digest, 0, resultPtr, digest.Length);
-            blob.pbData = resultPtr;
+            blob.pbData = (byte*)resultPtr;
             blob.cbData = (uint)digest.Length;
             return 0;
         }

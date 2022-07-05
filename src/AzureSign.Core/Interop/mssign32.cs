@@ -197,14 +197,6 @@ namespace AzureSign.Core.Interop
         }
     }
 
-
-    [type: StructLayout(LayoutKind.Sequential)]
-    internal struct CRYPTOAPI_BLOB
-    {
-        public uint cbData;
-        public IntPtr pbData;
-    }
-
     [type: StructLayout(LayoutKind.Sequential)]
     internal unsafe struct SIGNER_ATTR_AUTHCODE
     {
@@ -258,6 +250,6 @@ namespace AzureSign.Core.Interop
         [param: In, MarshalAs(UnmanagedType.U4)] uint algId,
         [param: In, MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.U1, SizeParamIndex = 4)] byte[] pDigestToSign,
         [param: In, MarshalAs(UnmanagedType.U4)] uint dwDigestToSign,
-        [param: In, Out] ref CRYPTOAPI_BLOB blob
+        [param: In, Out] ref Windows.Win32.Security.Cryptography.CRYPTOAPI_BLOB blob
         );
 }
