@@ -43,7 +43,7 @@ namespace AzureSign.Core
         void IDisposable.Dispose() => Dispose(true);
         ~MemoryCertificateStore() => Dispose(false);
 
-        public IntPtr Handle => _store.StoreHandle;
+        public unsafe HCERTSTORE Handle => (HCERTSTORE)(void*)_store.StoreHandle;
         public void Add(X509Certificate2 certificate) => _store.Add(certificate);
         public void Add(X509Certificate2Collection collection) => _store.AddRange(collection);
         public X509Certificate2Collection Certificates => _store.Certificates;
